@@ -6,7 +6,7 @@ def Query(s) :
 	"""
 	hostname = 'localhost'
 	username = 'root'
-	password = 'MySql@18'
+	password = ''
 	database = 'dbms_proj'
 	conn= mysql.connector.connect( host=hostname, user=username, passwd=password, db=database )
 	cur = conn.cursor()
@@ -20,7 +20,7 @@ def doQuery(s):
 	""" Only perform the Query, for create table, drop table extra"""
 	hostname = 'localhost'
 	username = 'root'
-	password = 'MySql@18'
+	password = ''
 	database = 'dbms_proj'
 	conn= mysql.connector.connect( host=hostname, user=username, passwd=password, db=database )
 	cur = conn.cursor()
