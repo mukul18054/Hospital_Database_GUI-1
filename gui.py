@@ -133,8 +133,8 @@ def showAdmin():
 
 	ax.vlines(x=label, ymin=0, ymax=size, color='firebrick', alpha=0.7, linewidth=2)
 	ax.scatter(x=label, y=size, color='firebrick', alpha=0.7)
-	ax.set_title('Lollipop Chart for Disease wise Patient Distribution')
-	ax.set_ylabel('Number of Patients')
+	ax.set_title('Lollipop Chart for Disease wise Dead Patient Distribution')
+	ax.set_ylabel('Number of Dead Patients')
 	ax.set_xticks(label)
 	ax.set_xticklabels(label, rotation=60, fontdict={'horizontalalignment': 'right'})
 
