@@ -10,7 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 def showPatients():
-	toplevel=tk.Toplevel( bg="white", height=900, width=900, )
+	toplevel=tk.Toplevel( bg="white", height=900, width=900, ) #opens a new window
 	toplevel.title("Patient Data")
 	
 	#	pie chart patient blood group
@@ -31,7 +31,7 @@ def showPatients():
 	ax1.pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
 	ax1.set_title("Distribution of patients according to Blood Groups")
 
-	#bar graph of patients with different diseases
+	# Lolipop graph of patients with different diseases
 	sq.doQuery("create table t select Disease_ID from Treatment inner join Patient on Patient.Treatment_ID= Treatment.Treatment_ID;")
 	table=sq.Query("select Name, count(*) from t inner join Disease on t.Disease_ID=Disease.Disease_ID group by Name;")
 	sq.doQuery("Drop table t;")
@@ -59,6 +59,7 @@ def showPatients():
 	"""
 	
 def showDoctors():
+
 	print("yay")
 def showAdmin():
 	print("yay")

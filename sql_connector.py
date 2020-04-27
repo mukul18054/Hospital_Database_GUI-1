@@ -17,6 +17,7 @@ def Query(s) :
 	return table
 
 def doQuery(s):
+	""" Only perform the Query, for create table, drop table extra"""
 	hostname = 'localhost'
 	username = 'root'
 	password = ''
