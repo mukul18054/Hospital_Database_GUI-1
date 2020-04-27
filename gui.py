@@ -180,6 +180,57 @@ def showAdmin():
 	plt.show()
 	'''
 def show3rdParty():
+	
+	print("3rdParty")
+	toplevel=tk.Toplevel( bg="white", height=900, width=900, ) #opens a new window
+	toplevel.title("Organ Donation Data")
+
+	# Organ Donation
+	query1="select Organ , count(Organ ) from Organ_Donations group by Organ ;" 
+	table=sq.Query(query1)
+	print(table)
+	label=[]
+	size=[]
+	explode=[]
+	for i in table[1]:
+		label.append(i[0])
+		size.append(i[1])
+		explode.append(i[1]*0.02)
+
+	figure1 = plt.Figure(figsize=(6,5), dpi=100)
+	ax1 = figure1.add_subplot(111)
+	canvas = FigureCanvasTkAgg(figure1, toplevel)
+	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+	ax1.pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
+	ax1.set_title("Number of Organs Donated by Type")
+
+
+
+	toplevel=tk.Toplevel( bg="white", height=900, width=900, ) #opens a new window
+	toplevel.title("Insurance Distribution Data")
+
+	#	Insurance
+	query1="select EXTRACT(YEAR FROM Date_of_expiry),Amount from insurance_record group by EXTRACT(YEAR FROM Date_of_expiry);" 
+	table=sq.Query(query1)
+	
+	label=[]
+	size=[]
+	explode=[]
+	for i in table[1]:
+		label.append(i[0])
+		size.append((float)(i[1]))
+		# explode.append(i[1]*0.02)
+
+	figure1 = plt.Figure(figsize=(16,5), dpi=100)
+	ax1 = figure1.add_subplot(111)
+	canvas = FigureCanvasTkAgg(figure1, toplevel)
+	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+	print(size,label)
+	ax1.hist(size,label=label)
+	ax1.set_title("Cost Distribution Over the Years")
+	"""
+	Organ Donation according to type of organ
+	Distribution Graph: No of new insurance and their amount
 
 	"""
 	Organ Donation according to type of organ
