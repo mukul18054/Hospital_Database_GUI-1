@@ -134,10 +134,51 @@ def showAdmin():
 	ax.vlines(x=label, ymin=0, ymax=size, color='firebrick', alpha=0.7, linewidth=2)
 	ax.scatter(x=label, y=size, color='firebrick', alpha=0.7)
 	ax.set_title('Lollipop Chart for Disease wise Dead Patient Distribution')
-	ax.set_ylabel('Number of Dead Patients')
+	ax.set_ylabel('Number of dead Patients')
 	ax.set_xticks(label)
 	ax.set_xticklabels(label, rotation=60, fontdict={'horizontalalignment': 'right'})
 
+
+	# Time series plot of patients getting admitted
+	# todo
+	'''
+	toplevel=tk.Toplevel( bg="white", height=900, width=900, )
+	toplevel.title("No of Patient registered with us")
+	
+	#	pie chart for the diff departments of the doctors
+	query1="select count(Patient_ID) from patient;" 
+	table=sq.Query(query1)
+	label=[]
+	size=[]
+	explode=[]
+	print(table)
+	print(table[1])
+
+	for i in table[1]:
+		label.append(i[0])
+		size.append(i[1])
+		explode.append(i[1]*0.02)
+	print(explode)
+	# Draw Plot
+	plt.figure(figsize=(16,10), dpi= 80)
+	plt.plot('datetime', 'traffic', data=explode, color='tab:red')
+
+	# Decoration
+	plt.ylim(50, 750)
+	xtick_location = explode.index.tolist()[::12]
+	xtick_labels = [x[-4:] for x in explode.datetime.tolist()[::12]]
+	plt.xticks(ticks=xtick_location, labels=xtick_labels, rotation=0, fontsize=12, horizontalalignment='center', alpha=.7)
+	plt.yticks(fontsize=12, alpha=.7)
+	plt.title("Air Passengers Traffic (1949 - 1969)", fontsize=22)
+	plt.grid(axis='both', alpha=.3)
+
+	# Remove borders
+	plt.gca().spines["top"].set_alpha(0.0)    
+	plt.gca().spines["bottom"].set_alpha(0.3)
+	plt.gca().spines["right"].set_alpha(0.0)    
+	plt.gca().spines["left"].set_alpha(0.3)   
+	plt.show()
+	'''
 def show3rdParty():
 
 	"""
@@ -168,7 +209,7 @@ patient_button= tk.Button(stake_holder_frame, bg="white", fg="grey", text="  Pat
 patient_button.pack()
 doctor_button= tk.Button(stake_holder_frame, bg="white", fg="grey", text="  Doctors  " , font=("Helvetica", 20, tk.font.BOLD), command=showDoctors)
 doctor_button.pack()
-admin_button= tk.Button(stake_holder_frame, bg="white", fg="grey", text="   Admin    " , font=("Helvetica", 20, tk.font.BOLD), command=showAdmin)
+admin_button= tk.Button(stake_holder_frame, bg="white", fg="grey", text="   Admin   " , font=("Helvetica", 20, tk.font.BOLD), command=showAdmin)
 admin_button.pack() 
 thirdparty_button= tk.Button(stake_holder_frame, bg="white", fg="grey", text=" 3rd Party " , font=("Helvetica", 20, tk.font.BOLD), command=show3rdParty)
 thirdparty_button.pack()
