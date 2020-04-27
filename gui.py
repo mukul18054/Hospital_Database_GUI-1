@@ -53,6 +53,7 @@ def showPatients():
 	ax.set_xticks(label)
 	ax.set_xticklabels(label, rotation=60, fontdict={'horizontalalignment': 'right'})
 
+
 	"""
 	count new patients admitted today
 	count total patients
@@ -60,10 +61,29 @@ def showPatients():
 	
 def showDoctors():
 
+	"""
+	Grouping patients per doctor
+	Distribution plot : doctors per department
+
+	"""
 	print("yay")
 def showAdmin():
 	print("yay")
+
+	"""
+	Number of ongoing treatment per Department
+	Resources stocks
+	Dead patients per Disease
+	Time series plot of patients getting admitted
+
+	"""
 def show3rdParty():
+
+	"""
+	Organ Donation according to type of organ
+	Distribution Graph: No of new insurance and their amount
+	
+	"""
 	print("yay")
 
 root = tk.Tk()
