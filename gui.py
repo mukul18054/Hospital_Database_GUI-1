@@ -68,7 +68,8 @@ def showDoctors():
 	"""
 	print("yay")
 def showAdmin():
-	print("yay")
+	print("Admin")
+
 
 	"""
 	Number of ongoing treatment per Department
@@ -77,6 +78,27 @@ def showAdmin():
 	Time series plot of patients getting admitted
 
 	"""
+	toplevel=tk.Toplevel( bg="white", height=900, width=900, )
+	toplevel.title("Department Data")
+	
+	#	pie chart for the diff departments of the doctors
+	query1="select type, count(type) from Doctors, Departments where Departments.Dept_ID=Doctors.Dept_ID group by type;" 
+	table=sq.Query(query1)
+	label=[]
+	size=[]
+	explode=[]
+	for i in table[1]:
+		label.append(i[0])
+		size.append(i[1])
+		explode.append(i[1]*0.02)
+
+	figure1 = plt.Figure(figsize=(6,5), dpi=100)
+	ax1 = figure1.add_subplot(111)
+	canvas = FigureCanvasTkAgg(figure1, toplevel)
+	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+	ax1.pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
+	ax1.set_title("Distribution of Doctors according to Departments")
+
 def show3rdParty():
 
 	"""
