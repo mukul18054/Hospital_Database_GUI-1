@@ -1,7 +1,5 @@
 import seaborn as sns 
-
 import tkinter as tk
-
 from tkinter import filedialog, Text, font
 import os
 from PIL import ImageTk, Image
@@ -91,6 +89,46 @@ def showPatients():
 
 	
 def showDoctors():
+
+	print("showDoctors")
+	toplevel=tk.Toplevel( bg="white", height=900, width=900, ) #opens a new window
+	toplevel.title("Grouping Patients Data")
+
+	# # Distribution of Patients among Doctors
+	# query1="select A.Doctor_ID, COUNT(B.Patient_ID) from Treatment as A, Patient as B where A.Treatment_ID = B.Treatment_ID group by A.Doctor_ID;" 
+	# table=sq.Query(query1)
+	# # print(table)
+	# label=[]
+	# size=[]
+	# for i in table[1]:
+	# 	label.append(i[0])
+	# 	size.append(i[1])
+
+	# figure1 = plt.Figure(figsize=(10,5), dpi=100)
+	# ax1 = figure1.add_subplot(111)
+	# canvas = FigureCanvasTkAgg(figure1, toplevel)
+	# canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+	# ax1.plot(label,size, 'r')
+	# ax1.set_title("Distribution of Patients among Doctors")
+
+	# Distribution of Doctors according to Departments
+	query1="select A.type, COUNT(B.Doctor_ID) from Departments as A, Doctors as B where A.Dept_ID = B.Dept_ID group by A.type;" 
+	table=sq.Query(query1)
+	# print(table)
+	label=[]
+	size=[]
+	explode=[]
+	for i in table[1]:
+		label.append(i[0])
+		size.append(i[1])
+		explode.append(i[1]*0.02)
+
+	figure1 = plt.Figure(figsize=(6,5), dpi=100)
+	ax1 = figure1.add_subplot(111)
+	canvas = FigureCanvasTkAgg(figure1, toplevel)
+	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
+	ax1.pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
+	ax1.set_title("Distribution of Doctors according to Departments")
 
 	"""
 	Grouping patients per doctor
@@ -238,7 +276,6 @@ def show3rdParty():
 	# Organ Donation
 	query1="select Organ , count(Organ ) from Organ_Donations group by Organ ;" 
 	table=sq.Query(query1)
-	print(table)
 	label=[]
 	size=[]
 	explode=[]
