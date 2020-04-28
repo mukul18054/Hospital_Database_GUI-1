@@ -176,13 +176,13 @@ def showAdmin():
 
 
 	data={}
-	data["Blood Groups"]=label
+	data["Department"]=label
 	data["Number of Patients"]=size
-	df=pd.DataFrame(data, columns=["Blood Groups", "Number of Patients"])
-	plot=sns.stripplot(x="Blood Groups", y="Number of Patients",data=df, ax=ax[0][0] )
+	df=pd.DataFrame(data, columns=["Department", "Number of Patients"])
+	plot=sns.stripplot(x="Department", y="Number of Patients",data=df, ax=ax[0][0] )
 	
 	ax[0][0].set_title("Department wise Number of Active patient Distribution ",fontdict={'fontsize':12})
-	ax[0][0].set_xticklabels(label, rotation=45, fontdict={'horizontalalignment': 'right'})
+	ax[0][0].set_xticklabels(label, rotation=30, fontdict={'horizontalalignment': 'right'})
 
 	# Dead patients per Disease
 	query1="create table t select Disease_ID from Treatment inner join Patient on Patient.Treatment_ID= Treatment.Treatment_ID;"
