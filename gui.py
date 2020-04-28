@@ -141,13 +141,14 @@ def showAdmin():
 
 
 	"""
-	Number of ongoing treatment per Department
-	Resources stocks
-	Dead patients per Disease
-	Time series plot of patients getting admitted
+	1. Number of ongoing treatment per Department
+	2. Dead patients per Disease
+	3. NO of doctors avl in diff departments
+	4. stock of resources available
+	# Time series plot of patients getting admitted
 
 	"""
-		#	Cat plot  for Busiest Department
+	#1.	Cat plot  for Busiest Department (ongoing treatments per departments)
 	toplevel=tk.Toplevel( bg="white", height=900, width=900, )
 	toplevel.title("Department Data")
 	
@@ -184,7 +185,7 @@ def showAdmin():
 	ax[0][0].set_title("Department wise Number of Active patient Distribution ",fontdict={'fontsize':12})
 	ax[0][0].set_xticklabels(label, rotation=30, fontdict={'horizontalalignment': 'right'})
 
-	# Dead patients per Disease
+	#2. Dead patients per Disease
 	query1="create table t select Disease_ID from Treatment inner join Patient on Patient.Treatment_ID= Treatment.Treatment_ID;"
 	query2="select Name, count(*) from t inner join Disease on t.Disease_ID=Disease.Disease_ID group by Name;"
 	query3="Drop table IF EXISTS t;" 
@@ -208,7 +209,7 @@ def showAdmin():
 	ax[0][1].set_xticklabels(label, rotation=45, fontdict={'horizontalalignment': 'right'})
 
 
-	#	pie chart for the diff departments of the doctors
+	#	3. pie chart for no of doc avl in diff departments
 	query1="select type, count(type) from Doctors, Departments where Departments.Dept_ID=Doctors.Dept_ID group by type;" 
 	table=sq.Query(query1)
 	label=[]
@@ -223,50 +224,22 @@ def showAdmin():
 		explode.append(i[1]*0.02)
 	print(explode)
 	ax[1][0].pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
-	ax[1][0].set_title("Department wise Number of Active patient Distribution ")
+	ax[1][0].set_title("Department wise percentage of available doctors ")
 
-
-
-	# Time series plot of patients getting admitted
-	# todo
-	'''
-	toplevel=tk.Toplevel( bg="white", height=900, width=900, )
-	toplevel.title("No of Patient registered with us")
-	
-	#	pie chart for the diff departments of the doctors
-	query1="select count(Patient_ID) from patient;" 
+	#4. bar graph of stock of supplies available
+	query1="select Name, Quantity_available from Stock_of_supplies;" 
 	table=sq.Query(query1)
 	label=[]
 	size=[]
-	explode=[]
-	print(table)
-	print(table[1])
-
 	for i in table[1]:
 		label.append(i[0])
-		size.append(i[1])
-		explode.append(i[1]*0.02)
-	print(explode)
-	# Draw Plot
-	plt.figure(figsize=(16,10), dpi= 80)
-	plt.plot('datetime', 'traffic', data=explode, color='tab:red')
+		size.append((float)(i[1]))
 
-	# Decoration
-	plt.ylim(50, 750)
-	xtick_location = explode.index.tolist()[::12]
-	xtick_labels = [x[-4:] for x in explode.datetime.tolist()[::12]]
-	plt.xticks(ticks=xtick_location, labels=xtick_labels, rotation=0, fontsize=12, horizontalalignment='center', alpha=.7)
-	plt.yticks(fontsize=12, alpha=.7)
-	plt.title("Air Passengers Traffic (1949 - 1969)", fontsize=22)
-	plt.grid(axis='both', alpha=.3)
-
-	# Remove borders
-	plt.gca().spines["top"].set_alpha(0.0)    
-	plt.gca().spines["bottom"].set_alpha(0.3)
-	plt.gca().spines["right"].set_alpha(0.0)    
-	plt.gca().spines["left"].set_alpha(0.3)   
-	plt.show()
-	'''
+	ax[1][1].bar(label,size, label=label, color=('#6600ff','#00ff00','#ff3300','#33FFFF'))
+	ax[1][1].set_title("Stock of Supplies available")
+	ax[1][1].set_xticklabels(label, rotation=25, fontdict={'horizontalalignment': 'right'})
+	ax[1][1].set_ylabel('Available quantity')
+	
 def show3rdParty():
 	
 	print("3rdParty")
