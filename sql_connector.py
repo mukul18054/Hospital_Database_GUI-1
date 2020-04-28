@@ -6,7 +6,7 @@ def Query(s) :
 	"""
 	hostname = 'localhost'
 	username = 'root'
-	password = 'Cherry678910'
+	password = ''
 	database = 'dbms_proj'
 	conn= mysql.connector.connect( host=hostname, user=username, passwd=password, db=database )
 	cur = conn.cursor()
