@@ -25,5 +25,3 @@ def doQuery(s):
 	conn= mysql.connector.connect( host=hostname, user=username, passwd=password, db=database )
 	cur = conn.cursor()
 	cur.execute(s)
-def stopConnection(conn):
-	conn.close()

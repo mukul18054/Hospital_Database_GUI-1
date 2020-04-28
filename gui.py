@@ -233,31 +233,29 @@ def show3rdParty():
 
 
 
-	toplevel=tk.Toplevel( bg="white", height=900, width=900, ) #opens a new window
-	toplevel.title("Insurance Distribution Data")
+	# toplevel=tk.Toplevel( bg="white", height=900, width=900, ) #opens a new window
+	# toplevel.title("Insurance Distribution Data")
 
 	#	Insurance
-	query1="select EXTRACT(YEAR FROM Date_of_expiry),Amount from insurance_record group by EXTRACT(YEAR FROM Date_of_expiry);" 
+	query1="select EXTRACT(YEAR FROM Date_of_expiry),AVG(Amount) from insurance_record group by EXTRACT(YEAR FROM Date_of_expiry);" 
 	table=sq.Query(query1)
-	
 	label=[]
 	size=[]
-	explode=[]
 	for i in table[1]:
 		label.append(i[0])
 		size.append((float)(i[1]))
-		# explode.append(i[1]*0.02)
 
 	figure1 = plt.Figure(figsize=(16,5), dpi=100)
-	ax1 = figure1.add_subplot(111)
+	# ax1 = figure1.add_subplot(111)
+	ax1 = figure1.add_axes([0.2,0.2,0.7,0.7])
 	canvas = FigureCanvasTkAgg(figure1, toplevel)
 	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-	print(size,label)
-	ax1.hist(size,label=label)
+	ax1.bar(label,size, label=label, color=('#6600ff','#00ff00','#ff3300','#33FFFF'))
 	ax1.set_title("Cost Distribution Over the Years")
+	
 	"""
 	Organ Donation according to type of organ
-	Distribution Graph: No of new insurance and their amount
+	Distribution Graph: Average Cost Year Wise Distribution during Expiry
 
 	"""
 	print("yay")
