@@ -109,30 +109,42 @@ def showAdmin():
 	Time series plot of patients getting admitted
 
 	"""
+		#	Cat plot  for Busiest Department
 	toplevel=tk.Toplevel( bg="white", height=900, width=900, )
 	toplevel.title("Department Data")
 	
-	#	pie chart for the diff departments of the doctors
-	query1="select type, count(type) from Doctors, Departments where Departments.Dept_ID=Doctors.Dept_ID group by type;" 
-	table=sq.Query(query1)
+	q1="drop table if exists temp, d_count;"
+	q2="create table temp select Doctor_ID from Treatment where End_time is NULL;"
+	q3="create table d_count select Dept_ID,count(Dept_ID) as dept_count from temp inner join Doctors on Doctors.Doctor_ID =temp.Doctor_ID group by Dept_ID;"
+	q4="select type as Department_Name, dept_count from d_count as c, Departments as d where d.Dept_ID = c.Dept_ID order by dept_count desc;"
+	sq.doQuery(q1)
+	sq.doQuery(q2)
+	sq.doQuery(q3)
+	table=sq.Query(q4)
+	sq.doQuery(q1)
+	print(table)
 	label=[]
 	size=[]
-	explode=[]
-	print(table)
-	print(table[1])
-
 	for i in table[1]:
 		label.append(i[0])
 		size.append(i[1])
-		explode.append(i[1]*0.02)
-	print(explode)
-	figure1 = plt.Figure(figsize=(6,5), dpi=100)
-	ax1 = figure1.add_subplot(111)
+	print(label)
+	print(size)
+	figure1, ax = plt.subplots(2,2, squeeze=False, gridspec_kw={'wspace':0.3, 'hspace':0.5})
+	figure1.set_figheight(20)
+	figure1.set_figwidth(20)
 	canvas = FigureCanvasTkAgg(figure1, toplevel)
-	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
-	ax1.pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
-	ax1.set_title("Distribution of Doctors according to Departments")
+	canvas.get_tk_widget().pack()
 
+
+	data={}
+	data["Blood Groups"]=label
+	data["Number of Patients"]=size
+	df=pd.DataFrame(data, columns=["Blood Groups", "Number of Patients"])
+	plot=sns.stripplot(x="Blood Groups", y="Number of Patients",data=df, ax=ax[0][0] )
+	
+	ax[0][0].set_title("Distribution of patients according to Blood Groups",fontdict={'fontsize':12})
+	ax[0][0].set_xticklabels(label, rotation=60, fontdict={'horizontalalignment': 'right'})
 
 	# Dead patients per Disease
 	query1="create table t select Disease_ID from Treatment inner join Patient on Patient.Treatment_ID= Treatment.Treatment_ID;"
@@ -150,20 +162,31 @@ def showAdmin():
 	for i in table2[1]:
 		label.append(i[0])
 		size.append(i[1])
+	ax[0][1].vlines(x=label, ymin=0, ymax=size, color='firebrick', alpha=0.7, linewidth=2)
+	ax[0][1].scatter(x=label, y=size, color='firebrick', alpha=0.7)
+	ax[0][1].set_title('Lollipop Chart for Disease wise Dead Patient Distribution', fontdict={'fontsize':12})
+	ax[0][1].set_ylabel('Number of dead Patients')
+	ax[0][1].set_xticks(label)
+	ax[0][1].set_xticklabels(label, rotation=60, fontdict={'horizontalalignment': 'right'})
 
-	# print(label)
-	# print(size)
-	figure1 = plt.Figure(figsize=(6,5), dpi=100)
-	ax = figure1.add_subplot(111)
-	canvas = FigureCanvasTkAgg(figure1, toplevel)
-	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 
-	ax.vlines(x=label, ymin=0, ymax=size, color='firebrick', alpha=0.7, linewidth=2)
-	ax.scatter(x=label, y=size, color='firebrick', alpha=0.7)
-	ax.set_title('Lollipop Chart for Disease wise Dead Patient Distribution')
-	ax.set_ylabel('Number of dead Patients')
-	ax.set_xticks(label)
-	ax.set_xticklabels(label, rotation=60, fontdict={'horizontalalignment': 'right'})
+	#	pie chart for the diff departments of the doctors
+	query1="select type, count(type) from Doctors, Departments where Departments.Dept_ID=Doctors.Dept_ID group by type;" 
+	table=sq.Query(query1)
+	label=[]
+	size=[]
+	explode=[]
+	print(table)
+	print(table[1])
+
+	for i in table[1]:
+		label.append(i[0])
+		size.append(i[1])
+		explode.append(i[1]*0.02)
+	print(explode)
+	ax[1][0].pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
+	ax[1][0].set_title("Distribution of Doctors according to Departments")
+
 
 
 	# Time series plot of patients getting admitted
