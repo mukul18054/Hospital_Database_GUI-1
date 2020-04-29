@@ -281,13 +281,43 @@ doQuery( myConnection,vq32)
 doQuery( myConnection,vq33)
 doQuery( myConnection,vq34)
 
+
 print("What's the avg cost of treatment in this hospital?")
 mq5="SELECT avg(cost) from Treatment;"
 doQuery( myConnection,mq5)
 
+print("What's the Max cost of treatments in this hospital?")
+mq5="SELECT max(cost) from Treatment;" 
+doQuery( myConnection,mq5)
+
+print("What's the Min cost of treatments in this hospital?")
+mq5="SELECT min(cost) from Treatment;" 
+doQuery( myConnection,mq5)
+
+print("What's the Variance of cost of treatments in this hospital?")
+mq5="SELECT VARIANCE(cost) from Treatment;" #################### This show that how much a cost of treatment may vary from avg cost(hOW THE VALUES ARE DISPERSED)
+doQuery( myConnection,mq5)
+
+print("What's the Std deviation of cost of treatments in this hospital?")
+mq5="SELECT STDDEV(cost) from Treatment;" #################### This show that how much a cost of treatment may vary from avg cost(SQ ROOT OF VARIANCE)
+doQuery( myConnection,mq5)
+
+
+
 print("Details of doctor who is most experienced (sort acco to the doctor's experience) for Gynaecology")
 mq6="SELECT Doctor_ID, max(experience), p.First_Name, p.Mid_Name, p.Last_Name, p.Age, doc.experience, doc.Avl_from, doc.Avl_till FROM Person p, Doctors doc WHERE p.U_ID=doc.U_ID and doc.Dept_ID =(SELECT Dept_ID from Departments where type='Gynaecology') group by Doctor_ID;"
 doQuery( myConnection,mq6)
+
+print("What's the Std deviation of Salary of Doctors in this hospital?")
+mq5="  select STDDEV(Salary) from Doctors;" #################### This show that how much the salary of Doctors may vary from avg Salary, which helps 
+											# hopital admin to decide the salary of doctor(SQ ROOT OF VARIANCE)
+doQuery( myConnection,mq5)
+
+print("What's the Std deviation of Salary of Doctors in this hospital?")
+mq5="  select VARIANCE(Salary) from Doctors;" #################### This show that how much the salary of Doctors may ARE DISTRIBUTED, which helps 
+											# hopital admin to decide the salary of doctor
+doQuery( myConnection,mq5)
+
 
 print("Total number of FeMale patient")
 mq7="SELECT count(Patient_ID) FROM patient WHERE U_ID in (SELECT U_ID from person WHERE gender = 'FeMale');"
