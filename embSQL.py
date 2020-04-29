@@ -6,6 +6,8 @@ password = 'MySql@18'
 database = 'dbms_proj'
 print ("Using mysql.connector…")
 import mysql.connector
+qNO=1
+
 def connect():
 	myConnection = mysql.connector.connect( host=hostname, user=username, passwd=password, db=database )
 	return myConnection
@@ -16,136 +18,155 @@ def disconnect():
 
 def convertToSql(s):
 	conn=connect()
-	print(s)
+	print("s:",s)
 	if(s.lower().find('select')==0):
 		print("Enter the table from which you want to select something")
 		tName=input()
 		cur = conn.cursor()
 		q='select * from '+tName
-		cur.execute(q)
-		seq=cur.column_names
-		l='select '
-		count=0
-		for i in range (len(seq)):
-			print("do want to select column:",seq[i])
+		try:
+			cur.execute(q)
+			seq=cur.column_names
+			l='select '
+			count=0
+			for i in range (len(seq)):
+				print("do want to select column:",seq[i])
+				inp=input()
+				if(inp.lower().find("y")==0):
+					if(count==0):
+						l+=seq[i]
+						count+=1
+					else:
+						l+=", "
+						l+=seq[i]
+			l+=' from '
+			l+=tName
+			print("any conditions? y/n")
 			inp=input()
-			if(inp.lower().find("y")==0):
-				if(count==0):
-					l+=seq[i]
-					count+=1
-				else:
-					l+=", "
-					l+=seq[i]
-		l+=' from '
-		l+=tName
-		print("any conditions? y/n")
-		inp=input()
-		if(inp.lower().find('y')==0):
-			print("write the conditions (for example col_name1=col_name2 and col_name1='something')")
-			inp=input()
-			l+=" Where "
-			l+=inp+";"
-		else:
-			l+=";"
-		disconnect()
-		return (l)
+			if(inp.lower().find('y')==0):
+				print("write the conditions (for example col_name1=col_name2 and col_name1='something')")
+				inp=input()
+				l+=" Where "
+				l+=inp+";"
+			else:
+				l+=";"
+			disconnect()
+			return (l)
+		except:
+			disconnect()
+
+			print("Wrong input")
+			return ''
 	elif(s.lower().find('insert')==0):
 		print("Enter the table in which you want to insert something")
 		tName=input()
 
 		cur = conn.cursor()
 		q='select * from '+tName
-		cur.execute(q)
-		seq=cur.column_names
-		l='insert into '+tName+ "("
-		temp=[]
-		count=0
-		for i in range (len(seq)):
-			print("do want to insert something in column:",seq[i])
-			inp=input()
-			if(inp.lower().find("y")==0):
-				if(count==0):
-					l+=seq[i]
-					print("enter the values (use ' ' for any char values. for eg: 'Mukul' ")
-					inp=input()
-					temp.append(inp)
-					count+=1
+		try:
+			cur.execute(q)
+			seq=cur.column_names
+			l='insert into '+tName+ "("
+			temp=[]
+			count=0
+			for i in range (len(seq)):
+				print("do want to insert something in column:",seq[i])
+				inp=input()
+				if(inp.lower().find("y")==0):
+					if(count==0):
+						l+=seq[i]
+						print("enter the values (use ' ' for any char values. for eg: 'Mukul' ")
+						inp=input()
+						temp.append(inp)
+						count+=1
+					else:
+						l+=", "+seq[i]
+						print("enter the values")
+						inp=input()
+						temp.append(inp)
+			l+=" ) VALUES ("
+			for i in range(len(temp)):
+				if(i==0):
+					l+=temp[i]
 				else:
-					l+=", "+seq[i]
-					print("enter the values")
-					inp=input()
-					temp.append(inp)
-		l+=" ) VALUES ("
-		for i in range(len(temp)):
-			if(i==0):
-				l+=temp[i]
-			else:
-				l+=", "+temp[i]
+					l+=", "+temp[i]
 
-		l+=' );'
-		disconnect()
+			l+=' );'
+			disconnect()
 
-		return l
-qNO=1
+			return l
+		except:
+			disconnect()
+			
+			print("wrong input")
+			return ''
 # Simple routine to run a query on a database and print the results:
 def doQuery( conn,s) :
 	global qNO
-
-	if(len(s)<=6):
+	if(len(s)==6):
 		s=convertToSql(s)
-		print ("SQL Query",qNO,". :", s)
-		conn=connect()
-		cur=conn.cursor()
-		cur.execute(s)
 
-		if(s.lower().find("select")>=0 and s.lower().find("select")<=5 ):
-		    rows=cur.fetchall()
-		    # print("rows",rows)
-		    seq=cur.column_names
-		    for i in range (len(seq)):
-		        if(i==len(seq)-1):
-		            print(seq[i])
-		        else:
-		            print(seq[i],"	  |",end='')
-		    if(len(rows)==0):
-		    	print("Table Empty")
-		    for i in range (len(rows)):
-		        for j in range(len(rows[i])):
-		            if(j==len(rows[i])-1):
-		                print(rows[i][j])
-		            else:
-		                print(rows[i][j],"	    |",end='')
-		print("***************************************************************************************************************************************************")
-		print()
-		qNO+=1
+		print ("Converted SQL Query",qNO,". :", s)
+		try:
+
+			conn=connect()
+			cur=conn.cursor()
+			cur.execute(s)
+
+			if(s.lower().find("select")>=0 and s.lower().find("select")<=5 ):
+				rows=cur.fetchall()
+				# print("rows",rows)
+				seq=cur.column_names
+				for i in range (len(seq)):
+					if(i==len(seq)-1):
+						print(seq[i])
+					else:
+						print(seq[i],"	  |",end='')
+				if(len(rows)==0):
+					print("Table Empty")
+				for i in range (len(rows)):
+					for j in range(len(rows[i])):
+						if(j==len(rows[i])-1):
+							print(rows[i][j])
+						else:
+							print(rows[i][j],"	    |",end='')
+			print("***************************************************************************************************************************************************")
+			print()
+			qNO+=1
+		except:
+			print("wrong input try again")
+			return 
 	else:
 		print()
-		print ("SQL Query",qNO,". :", s)
+		print ("Your SQL Query",qNO,". :", s)
 		qNO+=1
-		cur = conn.cursor()
-		cur.execute(s)
+		try:
+			cur = conn.cursor()
+			cur.execute(s)
 
-		# print(cur.fetchall)
-		if(s.lower().find("select")>=0 and s.lower().find("select")<=5 ):
-		    rows=cur.fetchall()
-		    # print("rows",rows)
-		    seq=cur.column_names
-		    for i in range (len(seq)):
-		        if(i==len(seq)-1):
-		            print(seq[i])
-		        else:
-		            print(seq[i],"	  |",end='')
-		    if(len(rows)==0):
-		    	print("Table Empty")
-		    for i in range (len(rows)):
-		        for j in range(len(rows[i])):
-		            if(j==len(rows[i])-1):
-		                print(rows[i][j])
-		            else:
-		                print(rows[i][j],"	    |",end='')
-		print("***************************************************************************************************************************************************")
-		print()
 
+			if(s.lower().find("select")>=0 and s.lower().find("select")<=5 ):
+				rows=cur.fetchall()
+				# print("rows",rows)
+				seq=cur.column_names
+				for i in range (len(seq)):
+					if(i==len(seq)-1):
+						print(seq[i])
+					else:
+						print(seq[i],"	  |",end='')
+				if(len(rows)==0):
+					print("Table Empty")
+				for i in range (len(rows)):
+					for j in range(len(rows[i])):
+						if(j==len(rows[i])-1):
+							print(rows[i][j])
+						else:
+							print(rows[i][j],"	    |",end='')
+			print("***************************************************************************************************************************************************")
+			print()
+		except:
+			print("wrong input try again")
+			return
 # print ("Using MySQLdb…")
 # import MySQLdb
 # myConnection = MySQLdb.connect( host=hostname, user=username, passwd=password, db=database )
