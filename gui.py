@@ -110,6 +110,7 @@ def showDoctors():
 	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
 	ax1.plot(label,size, 'r')
 	ax1.set_title("Distribution of Patients among Doctors")
+	ax1.set_xticklabels(label, rotation=30, fontdict={'horizontalalignment': 'right'})
 
 	# Distribution of Doctors according to Departments
 	query1="select A.type, COUNT(B.Doctor_ID) from Departments as A, Doctors as B where A.Dept_ID = B.Dept_ID group by A.type;" 
@@ -123,7 +124,7 @@ def showDoctors():
 		size.append(i[1])
 		explode.append(i[1]*0.02)
 
-	figure1 = plt.Figure(figsize=(6,5), dpi=100)
+	figure1 = plt.Figure(figsize=(8,8), dpi=100)
 	ax1 = figure1.add_subplot(212)
 	canvas = FigureCanvasTkAgg(figure1, toplevel)
 	canvas.get_tk_widget().pack(side=tk.LEFT, fill=tk.BOTH)
