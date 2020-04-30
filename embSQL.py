@@ -13,8 +13,58 @@ def connect():
 	return myConnection
 def disconnect():
 	myConnection.close()
+def predict(conn,s,year):
+	global qNO
+
+	print ("Your SQL Query",qNO,". :", s)
+	qNO+=1
+	try:
+		cur = conn.cursor()
+		cur.execute(s)
 
 
+		if(s.lower().find("select")>=0 and s.lower().find("select")<=5 ):
+			rows=cur.fetchall()
+			# print("rows",rows[0][0])
+			if(rows[0][0]==None):
+				print("Sorry we don't have enough data at present to predict")
+				return
+			print("Cost at present:", rows[0][0])
+			print("Cost after ",year,"years:", float(rows[0][0])*pow(1+(6/100),year))
+		print("***************************************************************************************************************************************************")
+		print()
+	except:
+		print("Sorry we do not have enough data at present to predict")
+		print("***************************************************************************************************************************************************")
+		print()
+
+		return
+
+
+def chance(conn,s):
+	global qNO
+
+	print ("Your SQL Query",qNO,". :", s)
+	qNO+=1
+	try:
+		cur = conn.cursor()
+		cur.execute(s)
+
+
+		if(s.lower().find("select")>=0 and s.lower().find("select")<=5 ):
+			rows=cur.fetchall()
+			# print("rows",rows[0][0])
+			if(rows[0][0]==None):
+				print("Sorry we don't have enough data at present to predict")
+				return
+			if(len(rows)==0):
+				print("Table Empty")
+			print(rows[0][0])
+		print("***************************************************************************************************************************************************")
+		print()
+	except:
+		print("Sorry we don't have enough data at present to predict")
+		return
 
 def convertToSql(s):
 	conn=connect()
@@ -352,6 +402,28 @@ while(s.lower().find("y")==0):
 	doQuery( myConnection,uq)
 	print("DO YOU WANT TO WRITE MORE SQL QUERIES? Y/N")
 	s=input()
+print("DO YOU WANT TO check the chance of a patient to get saved with a particular disease Y/N")
+s=input()
+while(s.lower().find("y")==0):
+	print("Disease Name?")
+	uq=input()
+	uq="select count(p.Patient_ID)*100/(count(p.Patient_ID)+count(d.Patient_ID)) from patient p, dead_patient d where p.Treatment_ID in (select Treatment_ID from treatment t where t.Disease_ID=(select di.Disease_ID from disease di where di.Name='"+uq+"') and t.End_time is not null ) and d.Treatment_ID in (select Treatment_ID from treatment t where t.Disease_ID=(select di.Disease_ID from disease di where di.Name='"+uq+"') );"
+	chance( myConnection,uq)
+	print("DO YOU WANT TO check it for other disease? Y/N")
+	s=input()
+print("DO YOU WANT TO predict the cost of treatment of a particular disease in future Y/N")
+s=input()
+while(s.lower().find("y")==0):
+	print("Disease Name?")
+	uq=input()
+	print("Years?")
+	year=int(input())
+	uq="select avg(cost) from treatment t where t.Disease_ID in (select d.Disease_ID from disease d where d.Name='"+uq+"');"
+	predict( myConnection,uq,year)
+	print("DO YOU WANT TO check it for other disease? Y/N")
+	s=input()
+
+
 print("HAVE SOME QUERIES?")
 s=input()
 while(s.lower().find("y")==0):
