@@ -82,7 +82,7 @@ def showPatients():
 	for i in table[1]:
 		label.append(i[0])
 		size.append(i[1])
-		explode.append(i[1]*0.02)
+		explode.append(i[1]*0.001)
 
 	ax[1][0].pie(size, labels=label, shadow=True,  autopct='%1.1f%%', explode=explode)
 	ax[1][0].set_title("Pie Chart: Patient Composition by Gender",fontdict={'fontsize':12})
@@ -170,7 +170,7 @@ def showAdmin():
 		size.append(i[1])
 	print(label)
 	print(size)
-	figure1, ax = plt.subplots(2,2, squeeze=False, gridspec_kw={'wspace':0.3, 'hspace':0.5})
+	figure1, ax = plt.subplots(2,2, squeeze=False, gridspec_kw={'wspace':0.4, 'hspace':0.8})
 	figure1.set_figheight(20)
 	figure1.set_figwidth(20)
 	canvas = FigureCanvasTkAgg(figure1, toplevel)
