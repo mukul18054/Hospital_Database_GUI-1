@@ -16,6 +16,14 @@ import pandas as pd
 def showPatients():
 	toplevel=tk.Toplevel( bg="white", height=900, width=900, ) #opens a new window
 	toplevel.title("Patient Data")
+
+
+	figure1, ax = plt.subplots(2,2, squeeze=False, gridspec_kw={'wspace':0.3, 'hspace':0.5})
+	figure1.set_figheight(20)
+	figure1.set_figwidth(20)
+	canvas = FigureCanvasTkAgg(figure1, toplevel)
+	canvas.get_tk_widget().pack()
+
 	
 	#	Cat plot  patient blood group
 	query1="select Blood_gp, count(Blood_gp) from Patient group by Blood_gp;" 
@@ -25,13 +33,6 @@ def showPatients():
 	for i in table[1]:
 		label.append(i[0])
 		size.append(i[1])
-
-	figure1, ax = plt.subplots(2,2, squeeze=False, gridspec_kw={'wspace':0.3, 'hspace':0.5})
-	figure1.set_figheight(20)
-	figure1.set_figwidth(20)
-	canvas = FigureCanvasTkAgg(figure1, toplevel)
-	canvas.get_tk_widget().pack()
-
 
 	data={}
 	data["Blood Groups"]=label
@@ -69,7 +70,6 @@ def showPatients():
 	data[table[0][0]]=label
 	data[table[0][1]]=size
 	df=pd.DataFrame(data, columns=table[0])
-
 	
 	plot=sns.stripplot(y="Age", x="Disease", data=df, ax=ax[1][1])
 	sns.set(style="ticks", color_codes=True)
